@@ -1,0 +1,98 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <iomanip>
+using namespace std;
+
+
+const int NUM_EMPLOYEES = 10;
+
+
+void readData(string names[], double hours[][3]) {
+    ifstream inputFile;
+    inputFile.open("ch8_Ex17Data.txt");
+
+
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        inputFile >> names[i];
+        inputFile >> hours[i][0];
+        inputFile >> hours[i][1];
+    }
+
+
+    inputFile.close();
+}
+
+
+void determinePay(double hours[][3]) {
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        double pay = 0;
+        if (hours[i][0] > 40) {
+            pay = (40 * hours[i][1]) + ((hours[i][0] - 40) * (hours[i][1] * 1.5));
+        } else {
+            pay = (hours[i][0] * hours[i][1]);
+        }
+        hours[i][2] = pay;
+    }
+}
+double calculateTotalPay(double hours[][3]) {
+    double totalPay = 0;
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        totalPay += hours[i][2];
+    }
+    return totalPay;
+}
+void outputHighPay(string names[], double hours[][3]) {
+    double totalPay = calculateTotalPay(hours);
+    double avgPay = totalPay / NUM_EMPLOYEES;
+
+
+    cout << "Salary Greater than Avg:" << endl;
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        if (hours[i][2] >= avgPay) {
+            cout << names[i] << " ";
+        }
+    }
+    cout << endl;
+}
+void outputData(string names[], double hours[][3]) {
+    cout << "Name Hrs Worked Pay Rate Salary" << endl;
+
+
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        cout << names[i] << "\t" << hours[i][0] << "\t\t" << hours[i][1] << "\t\t" << hours[i][2] << endl;
+    }
+}
+
+
+void outputAvgSalary(double hours[][3]) {
+    double totalPay = 0;
+    for (int i = 0; i < NUM_EMPLOYEES; i++) {
+        totalPay += hours[i][2];
+        
+    }
+    double avgPay = totalPay / NUM_EMPLOYEES;
+    cout << fixed << setprecision(2);
+    cout << "Average Salary: $" << fixed << setprecision(2) << avgPay << endl;
+}
+
+
+
+
+
+
+int main() {
+    string names[NUM_EMPLOYEES];
+    double hours[NUM_EMPLOYEES][3]; // [0] = hours worked, [1] = pay rate, [2] = salary
+
+
+    readData(names, hours);
+    determinePay(hours);
+    cout << fixed << setprecision(2);
+    outputData(names, hours);
+    outputAvgSalary(hours);
+    outputHighPay(names, hours);
+
+
+    return 0;
+}
